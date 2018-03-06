@@ -29,7 +29,6 @@ public class Order {
     private Service serviceId;
 
     @OneToMany(mappedBy = "orderId")
-    //@JoinColumn(name = "order_id", referencedColumnName = "order_id", nullable = false)
     private List<StatusHistory> statusHistory;
 
     @OneToOne
