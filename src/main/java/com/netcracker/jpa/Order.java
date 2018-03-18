@@ -20,18 +20,18 @@ public class Order {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User userId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "service_id", referencedColumnName = "service_id", nullable = false)
     private Service serviceId;
 
-    @OneToMany(mappedBy = "orderId")
+    @OneToMany(mappedBy = "orderId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StatusHistory> statusHistory;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id", referencedColumnName = "status_id", nullable = false)
     private Status statusId;
 

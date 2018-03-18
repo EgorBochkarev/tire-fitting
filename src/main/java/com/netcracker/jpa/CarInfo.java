@@ -23,8 +23,8 @@ public class CarInfo {
     @Column(name = "tire_type")
     private String tireType;
 
-    @OneToOne(mappedBy = "carInfo")
-    private User user;
+
+//    private User user;
 
     public CarInfo(int carInfoId, String carBrand, double tireRadius, String tireType) {
         this.carInfoId = carInfoId;
@@ -68,13 +68,13 @@ public class CarInfo {
         this.tireType = tireType;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     @Override
     public boolean equals(Object o) {

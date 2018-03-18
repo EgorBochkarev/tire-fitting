@@ -16,11 +16,11 @@ public class StatusHistory {
     @Column(name = "change_date")
     private Timestamp changeDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "order_id", nullable = false)
     private Order orderId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id", referencedColumnName = "status_id", nullable = false)
     private Status statusId;
 
