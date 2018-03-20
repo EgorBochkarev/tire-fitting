@@ -23,9 +23,6 @@ public class CarInfo {
     @Column(name = "tire_type")
     private String tireType;
 
-    @OneToOne(mappedBy = "carInfo")
-    private User user;
-
     public CarInfo(int carInfoId, String carBrand, double tireRadius, String tireType) {
         this.carInfoId = carInfoId;
         this.carBrand = carBrand;
@@ -66,14 +63,6 @@ public class CarInfo {
 
     public void setTireType(String tireType) {
         this.tireType = tireType;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Override

@@ -20,10 +20,10 @@ public class User {
     @Column(name = "location")
     private String location;
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Order> orders;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "car_info_id", referencedColumnName = "car_info_id", nullable = false)
     private CarInfo carInfo;
 
