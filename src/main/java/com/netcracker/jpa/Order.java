@@ -25,7 +25,7 @@ public class Order {
     private User userId;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "service_id", referencedColumnName = "service_id", nullable = false)
+    @JoinColumn(name = "service_id", referencedColumnName = "service_id")
     private Service serviceId;
 
     @OneToMany(mappedBy = "orderId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
