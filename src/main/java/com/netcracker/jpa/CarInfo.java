@@ -8,6 +8,7 @@ import javax.persistence.*;
 public class CarInfo {
 
     @Id
+    @GeneratedValue
     @Column(name = "car_info_id")
     private int carInfoId;
 
@@ -25,6 +26,12 @@ public class CarInfo {
 
     public CarInfo(int carInfoId, String carBrand, double tireRadius, String tireType) {
         this.carInfoId = carInfoId;
+        this.carBrand = carBrand;
+        this.tireRadius = tireRadius;
+        this.tireType = tireType;
+    }
+
+    public CarInfo(String carBrand, double tireRadius, String tireType) {
         this.carBrand = carBrand;
         this.tireRadius = tireRadius;
         this.tireType = tireType;

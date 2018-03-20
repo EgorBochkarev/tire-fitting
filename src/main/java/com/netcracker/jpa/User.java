@@ -32,6 +32,12 @@ public class User {
         this.location = location;
     }
 
+    public User(String name, String location, CarInfo carInfo) {
+        this.name = name;
+        this.location = location;
+        this.carInfo = carInfo;
+    }
+
     public User() {
     }
 
