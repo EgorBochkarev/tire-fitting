@@ -2,7 +2,6 @@ package com.netcracker.service;
 
 import com.netcracker.jpa.CarInfo;
 import com.netcracker.jpa.User;
-import com.netcracker.repository.CarsInfoRepository;
 import com.netcracker.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,9 +12,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UsersRepository usersRepository;
 
-    @Autowired
-    private CarsInfoRepository carsInfoRepository;
-
     @Override
     public Iterable<User> getAllUsers() {
         return usersRepository.findAll();
@@ -23,17 +19,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        User newUser = new User(user.getName(), user.getLocation(), carsInfoRepository.save(new CarInfo(user.getCarInfo().getCarBrand(), user.getCarInfo().getTireRadius(), user.getCarInfo().getTireType())));
-        return usersRepository.save(newUser);
+        user.setCarInfo(new CarInfo());
+        return usersRepository.save(user);
     }
 
     @Override
-    public User getUser(User user) {
-        return user;
+    public User getUser(int userId) {
+        return usersRepository.findOne(userId);
     }
 
     @Override
-    public User updateUser(User oldUser, User newUser) {
+    public User updateUser(int oldUserId, User newUser) {
+        User oldUser = usersRepository.findOne(oldUserId);
         if ((newUser.getName() != null) && !(newUser.getName().equals(""))){
             oldUser.setName(newUser.getName());
         }
@@ -47,7 +44,7 @@ public class UserServiceImpl implements UserService {
             if (newUser.getCarInfo().getTireRadius() >= 0){
                 oldUser.getCarInfo().setTireRadius(newUser.getCarInfo().getTireRadius());
             }
-            if ((newUser.getCarInfo().getTireType() == null) && !(newUser.getCarInfo().getTireType().equals(""))){
+            if ((newUser.getCarInfo().getTireType() != null) && !(newUser.getCarInfo().getTireType().equals(""))){
                 oldUser.getCarInfo().setTireType(newUser.getCarInfo().getTireType());
             }
         }
@@ -55,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(User user) {
-        usersRepository.delete(user);
+    public void deleteUser(int userId) {
+        usersRepository.delete(userId);
     }
 }

@@ -1,6 +1,5 @@
 package com.netcracker.controller;
 
-
 import com.netcracker.jpa.User;
 import com.netcracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +23,18 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{user_id:[\\d]+}", method = RequestMethod.GET)
-    public User getUser(@PathVariable("user_id") User user) {
-        return userService.getUser(user);
+    public User getUser(@PathVariable("user_id") int userId) {
+        return userService.getUser(userId);
     }
 
     @RequestMapping(value = "/{user_id:[\\d]+}", method = RequestMethod.PATCH)
-    public User updateUser(@PathVariable("user_id") User oldUser, @RequestBody User newUser) {
-        return userService.updateUser(oldUser, newUser);
+    public User updateUser(@PathVariable("user_id") int oldUserId, @RequestBody User newUser) {
+        return userService.updateUser(oldUserId, newUser);
     }
 
     @RequestMapping(value = "/{user_id:[\\d]+}", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable("user_id") User user){
-        userService.deleteUser(user);
+    public void deleteUser(@PathVariable("user_id") int userId){
+        userService.deleteUser(userId);
     }
 
 }
