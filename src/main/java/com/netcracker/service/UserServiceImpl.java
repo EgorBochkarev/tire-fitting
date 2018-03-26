@@ -19,16 +19,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        User newUser;
         if (user.getCarInfo() == null){
-            newUser = user;
-            newUser.setCarInfo(new CarInfo());
-        return usersRepository.save(newUser);
-        }   else{
-            newUser = user;
-            return usersRepository.save(newUser);
+            user.setCarInfo(new CarInfo());
         }
-
+        return usersRepository.save(user);
     }
 
     @Override
