@@ -1,16 +1,23 @@
 package com.netcracker.service;
 
 import com.netcracker.jpa.CarInfo;
+import com.netcracker.jpa.Order;
 import com.netcracker.jpa.User;
+import com.netcracker.repository.OrdersRepository;
 import com.netcracker.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private OrdersRepository ordersRepository;
 
     @Override
     public Iterable<User> getAllUsers() {
@@ -55,6 +62,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(int userId) {
+        List<Order> list = usersRepository.findOne(userId).getOrders();
+        User user = usersRepository.findOne(userId);
+        for (Order orders: list){
+            orders.setUserId(null);
+            user.setOrders(null);
+            usersRepository.save(user);
+            ordersRepository.save(orders);
+        }
         usersRepository.delete(userId);
     }
 }

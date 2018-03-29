@@ -21,7 +21,7 @@ public class Order {
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User userId;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -36,6 +36,11 @@ public class Order {
     private Status statusId;
 
     public Order() {
+    }
+
+    public Order(String description, Status statusId) {
+        this.description = description;
+        this.statusId = statusId;
     }
 
     public int getOrderId() {
