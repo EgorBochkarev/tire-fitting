@@ -1,5 +1,6 @@
 package com.netcracker.swagger;
 
+import com.google.common.base.Predicates;
 import io.swagger.annotations.*;
 import io.swagger.models.*;
 import io.swagger.models.Info;
@@ -28,9 +29,7 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                //.apis(RequestHandlerSelectors.basePackage("com.example.demo")) //package with our controllers
-                .apis(RequestHandlerSelectors.any())
-                //.paths(PathSelectors.regex("(?:/|/get/.*)")) //some endpoints cause errors, otherwise we would use .any()
+                .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(metaData());
