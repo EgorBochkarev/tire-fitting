@@ -1,14 +1,27 @@
 package com.netcracker.service;
 
+import com.netcracker.jpa.AuthorizationApp;
+import com.netcracker.jpa.Order;
 import com.netcracker.jpa.Service;
+import com.netcracker.jpa.User;
+import com.netcracker.repository.AuthorizationAppRepository;
+import com.netcracker.repository.OrdersRepository;
 import com.netcracker.repository.ServicesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 
 @org.springframework.stereotype.Service
 public class ServiceServiceImpl implements ServiceService {
     @Autowired
     private ServicesRepository servicesRepository;
+
+    @Autowired
+    private AuthorizationAppRepository authorizationAppRepository;
+
+    @Autowired
+    private OrdersRepository ordersRepository;
 
     @Override
     public Iterable<com.netcracker.jpa.Service> getAllServices() {
@@ -48,6 +61,22 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public void deleteService(int serviceId) {
+
+        List<Order> list = servicesRepository.findOne(serviceId).getOrders();
+        Iterable<AuthorizationApp> iterable = authorizationAppRepository.findAll();
+        Service service = servicesRepository.findOne(serviceId);
+        for (Order orders: list){
+            orders.setUserId(null);
+            service.setOrders(null);
+            servicesRepository.save(service);
+            ordersRepository.save(orders);
+        }
+        for (AuthorizationApp app: iterable){
+            if (service.equals(app.getServiceId())){
+                app.setServiceId(null);
+                authorizationAppRepository.delete(authorizationAppRepository.save(app));
+            }
+        }
         servicesRepository.delete(serviceId);
     }
 }
