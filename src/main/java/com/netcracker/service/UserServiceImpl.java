@@ -1,8 +1,10 @@
 package com.netcracker.service;
 
+import com.netcracker.jpa.AuthorizationApp;
 import com.netcracker.jpa.CarInfo;
 import com.netcracker.jpa.Order;
 import com.netcracker.jpa.User;
+import com.netcracker.repository.AuthorizationAppRepository;
 import com.netcracker.repository.OrdersRepository;
 import com.netcracker.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private OrdersRepository ordersRepository;
+
+    @Autowired
+    private AuthorizationAppRepository authorizationAppRepository;
 
     @Override
     public Iterable<User> getAllUsers() {
@@ -63,12 +68,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(int userId) {
         List<Order> list = usersRepository.findOne(userId).getOrders();
+        Iterable<AuthorizationApp> iterable = authorizationAppRepository.findAll();
         User user = usersRepository.findOne(userId);
         for (Order orders: list){
             orders.setUserId(null);
             user.setOrders(null);
             usersRepository.save(user);
             ordersRepository.save(orders);
+        }
+        for (AuthorizationApp app: iterable){
+            if (user.equals(app.getUserId())){
+                app.setUserId(null);
+                authorizationAppRepository.delete(authorizationAppRepository.save(app));
+            }
         }
         usersRepository.delete(userId);
     }
