@@ -2,7 +2,8 @@ package com.netcracker.jpa;
 
 import javax.persistence.*;
 
-
+@Entity
+@Table(name = "authorization_app")
 public class AuthorizationApp {
     @Id
     @GeneratedValue
