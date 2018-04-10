@@ -22,25 +22,25 @@ public class Order {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User userId;
+    private User user;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "service_id", referencedColumnName = "service_id")
-    private Service serviceId;
+    private Service service;
 
-    @OneToMany(mappedBy = "orderId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StatusHistory> statusHistory;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id", referencedColumnName = "status_id", nullable = false)
-    private Status statusId;
+    private Status status;
 
     public Order() {
     }
 
-    public Order(String description, Status statusId) {
+    public Order(String description, Status status) {
         this.description = description;
-        this.statusId = statusId;
+        this.status = status;
     }
 
     public int getOrderId() {
@@ -67,20 +67,20 @@ public class Order {
         this.description = description;
     }
 
-    public User getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Service getServiceId() {
-        return serviceId;
+    public Service getService() {
+        return service;
     }
 
-    public void setServiceId(Service serviceId) {
-        this.serviceId = serviceId;
+    public void setService(Service service) {
+        this.service = service;
     }
 
     public List<StatusHistory> getStatusHistory() {
@@ -91,12 +91,12 @@ public class Order {
         this.statusHistory = statusHistory;
     }
 
-    public Status getStatusId() {
-        return statusId;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setStatusId(Status statusId) {
-        this.statusId = statusId;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
@@ -127,8 +127,6 @@ public class Order {
                 "orderId=" + orderId +
                 ", rating=" + rating +
                 ", description='" + description + '\'' +
-                ", userId=" + userId +
-                ", serviceId=" + serviceId +
                 '}';
     }
 }

@@ -20,7 +20,7 @@ public class User {
     @Column(name = "location")
     private String location;
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Order> orders;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

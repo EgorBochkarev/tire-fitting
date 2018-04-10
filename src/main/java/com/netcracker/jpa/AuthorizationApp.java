@@ -20,11 +20,11 @@ public class AuthorizationApp {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User userId;
+    private User user;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "service_id", referencedColumnName = "service_id")
-    private Service serviceId;
+    private Service service;
 
     public AuthorizationApp(String login, String password) {
         this.login = login;
@@ -58,19 +58,19 @@ public class AuthorizationApp {
         this.password = password;
     }
 
-    public User getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Service getServiceId() {
-        return serviceId;
+    public Service getService() {
+        return service;
     }
 
-    public void setServiceId(Service serviceId) {
-        this.serviceId = serviceId;
+    public void setService(Service service) {
+        this.service = service;
     }
 }

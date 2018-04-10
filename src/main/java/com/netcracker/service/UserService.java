@@ -1,16 +1,27 @@
 package com.netcracker.service;
 
+import com.netcracker.dto.UserWrapper;
 import com.netcracker.jpa.User;
+
+import java.util.List;
 
 public interface UserService {
 
-    Iterable<User> getAllUsers();
+//    Iterable<User> getAllUsers();
 
-    User createUser(User user);
+    List<UserWrapper> getAllUsers();
 
-    User getUser(int userId);
+//    User createUser(User user);
 
-    User updateUser(int oldUserId, User newUser);
+    UserWrapper createUser(UserWrapper user);
+
+//    User getUser(int userId);
+
+    UserWrapper getUser(int userId);
+
+//    User updateUser(int oldUserId, User newUser);
+
+    UserWrapper updateUser(int oldUserId, UserWrapper newUser);
 
     void deleteUser(int userId);
 
