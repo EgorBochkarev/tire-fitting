@@ -1,9 +1,11 @@
 package com.netcracker.controller;
 
-import com.netcracker.jpa.Service;
+import com.netcracker.dto.ServiceWrapper;
 import com.netcracker.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/service")
@@ -13,22 +15,22 @@ public class ServiceController {
     private ServiceService serviceService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Iterable<Service> getAllServices() {
+    public List<ServiceWrapper> getAllServices() {
         return serviceService.getAllServices();
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Service createService(@RequestBody Service service) {
+    public ServiceWrapper createService(@RequestBody ServiceWrapper service) {
         return serviceService.createService(service);
     }
 
     @RequestMapping(value = "/{service_id:[\\d]+}", method = RequestMethod.GET)
-    public Service getUser(@PathVariable("service_id") int serviceId) {
+    public ServiceWrapper getUser(@PathVariable("service_id") int serviceId) {
         return serviceService.getService(serviceId);
     }
 
     @RequestMapping(value = "/{service_id:[\\d]+}", method = RequestMethod.PATCH)
-    public Service updateService(@PathVariable("service_id") int serviceId, @RequestBody Service newService) {
+    public ServiceWrapper updateService(@PathVariable("service_id") int serviceId, @RequestBody ServiceWrapper newService) {
         return serviceService.updateService(serviceId, newService);
     }
 

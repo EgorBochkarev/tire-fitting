@@ -28,7 +28,7 @@ public class Service {
     @Column(name = "total_rating")
     private double totalRating;
 
-    @OneToMany(mappedBy = "serviceId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Order> orders;
 
     public Service(String name, String location, int servingStaff) {

@@ -18,11 +18,11 @@ public class StatusHistory {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "order_id", nullable = false)
-    private Order orderId;
+    private Order order;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id", referencedColumnName = "status_id", nullable = false)
-    private Status statusId;
+    private Status status;
 
     public StatusHistory() {
     }
@@ -43,20 +43,20 @@ public class StatusHistory {
         this.changeDate = changeDate;
     }
 
-    public Order getOrderId() {
-        return orderId;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrderId(Order orderId) {
-        this.orderId = orderId;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
-    public Status getStatusId() {
-        return statusId;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setStatusId(Status statusId) {
-        this.statusId = statusId;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
@@ -84,6 +84,7 @@ public class StatusHistory {
         return "StatusHistory{" +
                 "statusHistoryId=" + statusHistoryId +
                 ", changeDate=" + changeDate +
+                ", orderId=" + order +
                 '}';
     }
 }
