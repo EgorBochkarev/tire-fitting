@@ -27,47 +27,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AuthorizationAppRepository authorizationAppRepository;
 
-//    @Override
-//    public Iterable<User> getAllUsers() {
-//        return usersRepository.findAll();
-//    }
-//
-//    @Override
-//    public User createUser(User user) {
-//        if (user.getCarInfo() == null){
-//            user.setCarInfo(new CarInfo());
-//        }
-//        return usersRepository.save(user);
-//    }
-//
-//    @Override
-//    public User getUser(int userId) {
-//        return usersRepository.findOne(userId);
-//    }
-//
-//    @Override
-//    public User updateUser(int oldUserId, User newUser) {
-//        User oldUser = usersRepository.findOne(oldUserId);
-//        if ((newUser.getName() != null) && !(newUser.getName().equals(""))){
-//            oldUser.setName(newUser.getName());
-//        }
-//        if ((newUser.getLocation() != null) && !(newUser.getLocation().equals(""))){
-//            oldUser.setLocation(newUser.getLocation());
-//        }
-//        if (newUser.getCarInfo() != null){
-//            if ((newUser.getCarInfo().getCarBrand() != null) && !(newUser.getCarInfo().getCarBrand().equals(""))){
-//                oldUser.getCarInfo().setCarBrand(newUser.getCarInfo().getCarBrand());
-//            }
-//            if (newUser.getCarInfo().getTireRadius() >= 0){
-//                oldUser.getCarInfo().setTireRadius(newUser.getCarInfo().getTireRadius());
-//            }
-//            if ((newUser.getCarInfo().getTireType() != null) && !(newUser.getCarInfo().getTireType().equals(""))){
-//                oldUser.getCarInfo().setTireType(newUser.getCarInfo().getTireType());
-//            }
-//        }
-//        return usersRepository.save(oldUser);
-//    }
-
     @Override
     public List<UserWrapper> getAllUsers() {
         Iterable<User> all = usersRepository.findAll();
@@ -93,8 +52,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserWrapper updateUser(int oldUserId, UserWrapper newUser) {
-        User oldUser = usersRepository.findOne(oldUserId);
+    public UserWrapper updateUser(int userId, UserWrapper newUser) {
+        User oldUser = usersRepository.findOne(userId);
         if ((newUser.getName() != null) && !(newUser.getName().equals(""))){
             oldUser.setName(newUser.getName());
         }
@@ -104,7 +63,7 @@ public class UserServiceImpl implements UserService {
             if ((newUser.getCarBrand() != null) && !(newUser.getCarBrand().equals(""))){
                 oldUser.getCarInfo().setCarBrand(newUser.getCarBrand());
             }
-            if (newUser.getTireRadius() >= 0){
+            if (newUser.getTireRadius() > 0){
                 oldUser.getCarInfo().setTireRadius(newUser.getTireRadius());
             }
             if ((newUser.getTireType() != null) && !(newUser.getTireType().equals(""))){

@@ -1,7 +1,6 @@
 package com.netcracker.controller;
 
 import com.netcracker.dto.UserWrapper;
-import com.netcracker.jpa.User;
 import com.netcracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

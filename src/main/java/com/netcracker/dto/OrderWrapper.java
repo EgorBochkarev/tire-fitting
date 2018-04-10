@@ -3,6 +3,8 @@ package com.netcracker.dto;
 
 public class OrderWrapper {
 
+    private int orderId;
+
     private String status;
 
     private String description;
@@ -33,12 +35,21 @@ public class OrderWrapper {
         this.description = description;
     }
 
-    public OrderWrapper(String status, String description, int rating, int userId, int serviceId) {
+    public OrderWrapper(int orderId,String status, String description, int rating, int userId, int serviceId) {
+        this.orderId = orderId;
         this.status = status;
         this.description = description;
         this.rating = rating;
         this.userId = userId;
         this.serviceId = serviceId;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getUserId() {
@@ -76,7 +87,8 @@ public class OrderWrapper {
     @Override
     public String toString() {
         return "OrderWrapper{" +
-                "status='" + status + '\'' +
+                "orderId=" + orderId +
+                ", status='" + status + '\'' +
                 ", description='" + description + '\'' +
                 ", rating=" + rating +
                 ", userId=" + userId +

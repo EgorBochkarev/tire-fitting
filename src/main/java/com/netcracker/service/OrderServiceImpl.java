@@ -27,54 +27,22 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private StatusesRepository statusesRepository;
 
-//    @Override
-//    public Iterable<Order> getAllOrders() {
-//        return ordersRepository.findAll();
-//    }
-//
-//    @Override
-//    public Order createOrder(Order order) {
-//        if (order.getUser() != null){
-//            order.setUser(usersRepository.findOne(order.getUser().getUserId()));
-//        }
-//        order.setStatus(statusesRepository.findOne(order.getStatus().getStatusId()));
-//        return ordersRepository.save(order);
-//    }
-//
-//    @Override
-//    public Order getOrder(int orderId) {
-//        return ordersRepository.findOne(orderId);
-//    }
-//
-//    @Override
-//    public Order updateOrder(int oldOrderId, Order newOrder) {
-//
-//        Order oldOrder = ordersRepository.findOne(oldOrderId);
-//
-//        if ((newOrder.getDescription()) != null && !(newOrder.getDescription().equals(""))){
-//            oldOrder.setDescription(newOrder.getDescription());
-//        }
-//        if (newOrder.getStatus() != null && statusesRepository.exists(newOrder.getStatus().getStatusId()) && !oldOrder.getStatus().equals(newOrder.getStatus())){
-//            oldOrder.setStatus(statusesRepository.findOne(newOrder.getStatus().getStatusId()));
-//        }
-//        if ((newOrder.getRating() >= 0)){
-//            oldOrder.setRating(newOrder.getRating());
-//        }
-//        if (newOrder.getUser() != null && usersRepository.exists(newOrder.getUser().getUserId()) && oldOrder.getUser() == null){
-//            oldOrder.setUser(usersRepository.findOne(newOrder.getUser().getUserId()));
-//        }
-//        if (newOrder.getService() != null && servicesRepository.exists(newOrder.getService().getServiceId()) && oldOrder.getService() == null){
-//            oldOrder.setService(servicesRepository.findOne(newOrder.getService().getServiceId()));
-//        }
-//        return ordersRepository.save(oldOrder);
-//    }
-
     @Override
     public List<OrderWrapper> getAllOrders() {
         Iterable<Order> all = ordersRepository.findAll();
         List<OrderWrapper> list = new LinkedList<OrderWrapper>();
         for (Order order: all){
-            list.add(new OrderWrapper(order.getStatus().getStatusName(), order.getDescription()));
+            if (order.getService() != null && order.getUser() != null){
+                list.add(new OrderWrapper(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), order.getService().getServiceId()));
+            }   else
+            if (order.getService() == null && order.getUser() != null) {
+                    list.add(new OrderWrapper(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), 0));
+            }   else
+            if (order.getUser() == null && order.getService() != null) {
+                    list.add(new OrderWrapper(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, order.getService().getServiceId()));
+            } else {
+                    list.add(new OrderWrapper(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, 0));
+            }
         }
         return list;
     }
@@ -82,23 +50,27 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderWrapper createOrder(OrderWrapper orderWrapper) {
         Status status = statusesRepository.findOne(Specifications.where(SpecificationForJpa.checkRetriesStatus(orderWrapper.getStatus())));
-//        Order order = new Order(orderWrapper.getDescription(), status);
-//        order.setStatus(statusesRepository.findOne(order.getStatus().getStatusId()));
-        ordersRepository.save(new Order(orderWrapper.getDescription(), status));
-        return new OrderWrapper(orderWrapper.getStatus(), orderWrapper.getDescription(), 0, 0, 0);
+        Order order = new Order(orderWrapper.getDescription(), usersRepository.findOne(orderWrapper.getUserId()), status);
+        if (orderWrapper.getUserId() > 0 && usersRepository.exists(orderWrapper.getUserId())) {
+            order = ordersRepository.save(order);
+            return new OrderWrapper(order.getOrderId(), orderWrapper.getStatus(), orderWrapper.getDescription(), 0, usersRepository.findOne(orderWrapper.getUserId()).getUserId(), 0);
+        }   else{
+            order = ordersRepository.save(order);
+            return new OrderWrapper(order.getOrderId(), orderWrapper.getStatus(), orderWrapper.getDescription(), 0, 0, 0);
+        }
     }
 
     @Override
     public OrderWrapper getOrder(int orderId) {
         Order order = ordersRepository.findOne(orderId);
         if (order.getUser() != null && order.getService() != null){
-            return new OrderWrapper(order.getStatus().getStatusName(), order.getDescription(),order.getRating(), order.getUser().getUserId(), order.getService().getServiceId());
+            return new OrderWrapper(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(),order.getRating(), order.getUser().getUserId(), order.getService().getServiceId());
         }   else
         if (order.getUser() != null && order.getService() == null){
-            return new OrderWrapper(order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), 0);
+            return new OrderWrapper(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), 0);
         }   else if (order.getUser() == null && order.getService() != null){
-            return new OrderWrapper(order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, order.getService().getServiceId());
-        }   else return new OrderWrapper(order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, 0);
+            return new OrderWrapper(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, order.getService().getServiceId());
+        }   else return new OrderWrapper(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, 0);
     }
 
     @Override
@@ -108,19 +80,31 @@ public class OrderServiceImpl implements OrderService {
         if ((newOrder.getDescription()) != null && !(newOrder.getDescription().equals(""))){
             oldOrder.setDescription(newOrder.getDescription());
         }
-        if (newOrder.getStatus() != null && status != null /*&& !oldOrder.getStatus().equals(newOrder.getStatus())*/){
+        if (newOrder.getStatus() != null && status != null){
             oldOrder.setStatus(status);
         }
-        if ((newOrder.getRating() >= 0)){
+        if ((newOrder.getRating() > 0)){
             oldOrder.setRating(newOrder.getRating());
         }
-        if (newOrder.getUserId() >= 0 && usersRepository.exists(newOrder.getUserId()) && oldOrder.getUser() == null){
+        if (newOrder.getUserId() > 0 && usersRepository.exists(newOrder.getUserId()) && oldOrder.getUser() == null){
             oldOrder.setUser(usersRepository.findOne(newOrder.getUserId()));
         }
-        if (newOrder.getServiceId() >= 0 && servicesRepository.exists(newOrder.getServiceId()) && oldOrder.getService() == null){
+        if (newOrder.getServiceId() > 0 && servicesRepository.exists(newOrder.getServiceId()) && oldOrder.getService() == null){
             oldOrder.setService(servicesRepository.findOne(newOrder.getServiceId()));
         }
-        return new OrderWrapper(oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), oldOrder.getUser().getUserId(), oldOrder.getService().getServiceId());
+        ordersRepository.save(oldOrder);
+        oldOrder = ordersRepository.findOne(oldOrderId);
+        if (oldOrder.getService() != null && oldOrder.getUser() != null){
+            return new OrderWrapper(oldOrder.getOrderId(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), oldOrder.getUser().getUserId(), oldOrder.getService().getServiceId());
+        }   else if (oldOrder.getService() == null){
+            return new OrderWrapper(oldOrder.getOrderId(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), oldOrder.getUser().getUserId(), 0);
+        }   else
+        if (oldOrder.getUser() == null){
+            return new OrderWrapper(oldOrder.getOrderId(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), 0, oldOrder.getService().getServiceId());
+        }   else {
+            return new OrderWrapper(oldOrder.getOrderId(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), 0, 0);
+        }
+
     }
 
     @Override

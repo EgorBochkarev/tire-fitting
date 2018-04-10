@@ -1,5 +1,6 @@
 package com.netcracker.service;
 
+import com.netcracker.dto.ServiceWrapper;
 import com.netcracker.jpa.Order;
 import com.netcracker.jpa.Service;
 import com.netcracker.repository.AuthorizationAppRepository;
@@ -9,6 +10,7 @@ import com.netcracker.repository.SpecificationForJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -24,39 +26,45 @@ public class ServiceServiceImpl implements ServiceService {
     private AuthorizationAppRepository authorizationAppRepository;
 
     @Override
-    public Iterable<com.netcracker.jpa.Service> getAllServices() {
-        return servicesRepository.findAll();
+    public List<ServiceWrapper> getAllServices() {
+        Iterable<Service> all = servicesRepository.findAll();
+        List<ServiceWrapper> list = new LinkedList<ServiceWrapper>();
+        for (Service service: all){
+            list.add(new ServiceWrapper(service.getServiceId(), service.getName(), service.getLocation(), service.getServingStaff(), service.getTotalRating()));
+        }
+        return list;
     }
 
     @Override
-    public Service createService(Service service) {
-        return servicesRepository.save(service);
+    public ServiceWrapper createService(ServiceWrapper serviceWrapper) {
+        Service service = new Service(serviceWrapper.getName(), serviceWrapper.getLocation(), serviceWrapper.getServingStaff());
+        servicesRepository.save(service);
+        return new ServiceWrapper(service.getServiceId(), service.getName(), service.getLocation(), service.getServingStaff(), service.getTotalRating());
     }
 
     @Override
-    public Service getService(int serviceId) {
-        return servicesRepository.findOne(serviceId);
+    public ServiceWrapper getService(int serviceId) {
+        Service service = servicesRepository.findOne(serviceId);
+        return new ServiceWrapper(service.getServiceId(), service.getName(), service.getLocation(), service.getServingStaff(), service.getTotalRating());
     }
 
     @Override
-    public Service updateService(int serviceId, Service newService) {
+    public ServiceWrapper updateService(int serviceId, ServiceWrapper newService) {
         Service oldService = servicesRepository.findOne(serviceId);
-        if ((newService.getName()!=null)&&(newService.getName()!="")) {
+        if ((newService.getName()!= null) && !(newService.getName().equals(""))) {
             oldService.setName(newService.getName());
         }
-        if ((newService.getLocation()!=null)&&(newService.getLocation()!="")) {
+        if ((newService.getLocation()!=null) && !(newService.getLocation().equals(""))) {
             oldService.setName(newService.getName());
         }
-        if ((newService.getServingStaff()>0)){
+        if ((newService.getServingStaff() > 0)){
             oldService.setServingStaff(newService.getServingStaff());
         }
-        if ((newService.getTotalRating()>0)){
+        if ((newService.getTotalRating() > 0)){
             oldService.setTotalRating(newService.getTotalRating());
         }
-        if ((newService.getOrders()!=null)&&(newService.getOrders().size()>0)){
-            oldService.setOrders(newService.getOrders());
-        }
-        return oldService;
+        servicesRepository.save(oldService);
+        return new ServiceWrapper(oldService.getServiceId(), oldService.getName(), oldService.getLocation(), oldService.getServingStaff(), oldService.getTotalRating());
     }
 
     @Override
@@ -69,6 +77,9 @@ public class ServiceServiceImpl implements ServiceService {
             servicesRepository.save(service);
             ordersRepository.save(orders);
         }
+        if (authorizationAppRepository.findOne(Specifications.where(SpecificationForJpa.checkRetriesService(service))) == null){
+            servicesRepository.delete(service);
+        }   else
         authorizationAppRepository.delete(authorizationAppRepository.findOne(Specifications.where(SpecificationForJpa.checkRetriesService(service))));
     }
 }
