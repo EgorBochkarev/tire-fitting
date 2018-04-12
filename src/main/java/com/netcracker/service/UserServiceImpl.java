@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         List<Order> list = usersRepository.findOne(userId).getOrders();
         User user = usersRepository.findOne(userId);
         for (Order orders: list){
-            orders.setUserId(null);
+            orders.setUser(null);
             user.setOrders(null);
             usersRepository.save(user);
             ordersRepository.save(orders);
