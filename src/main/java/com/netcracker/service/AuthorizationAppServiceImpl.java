@@ -2,22 +2,46 @@ package com.netcracker.service;
 
 
 import com.netcracker.jpa.AuthorizationApp;
-import org.springframework.stereotype.Service;
+import com.netcracker.repository.AuthorizationAppRepository;
+import com.netcracker.repository.ServicesRepository;
+import com.netcracker.repository.UsersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Service
+
+@org.springframework.stereotype.Service
 public class AuthorizationAppServiceImpl implements AuthorizationAppService {
+    @Autowired
+    private AuthorizationAppRepository authorizationAppRepository;
+
+    @Autowired
+    private UsersRepository usersRepository;
+
+    @Autowired
+    private ServicesRepository servicesRepository;
+
     @Override
-    public Iterable<AuthorizationApp> getAllAuthorizationAppWrappers() {
-        return null;
+    public Iterable<AuthorizationApp> getAllAuthorizationApp() {
+        return authorizationAppRepository.findAll();
     }
 
     @Override
     public AuthorizationApp registeringNewProfile(AuthorizationApp authorizationApp) {
-        return null;
+        AuthorizationApp app = new AuthorizationApp(authorizationApp.getLogin().toLowerCase(), authorizationApp.getPassword().toLowerCase());
+        if (usersRepository.exists(authorizationApp.getUser().getUserId())) {
+            app.setUser(usersRepository.findOne(authorizationApp.getUser().getUserId()));
+            return authorizationAppRepository.save(app);
+        }
+        if (servicesRepository.exists(authorizationApp.getService().getServiceId())) {
+            app.setService(servicesRepository.findOne(authorizationApp.getService().getServiceId()));
+            return authorizationAppRepository.save(app);
+        } else return null;
     }
 
     @Override
-    public AuthorizationApp getProfile(String login) {
-        return null;
+    public AuthorizationApp getProfileByLogin(String login, String password) {
+        AuthorizationApp app = authorizationAppRepository.findProfileByLogin(login.toLowerCase());
+        if (app != null && password.toLowerCase().equals(app.getPassword())){
+            return app;
+        }   else return null;
     }
 }

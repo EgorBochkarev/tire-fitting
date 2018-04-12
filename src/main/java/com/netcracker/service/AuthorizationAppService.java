@@ -4,10 +4,10 @@ import com.netcracker.jpa.AuthorizationApp;
 
 public interface AuthorizationAppService {
 
-    Iterable<AuthorizationApp> getAllAuthorizationAppWrappers();
+    Iterable<AuthorizationApp> getAllAuthorizationApp();
 
     AuthorizationApp registeringNewProfile(AuthorizationApp authorizationApp);
 
-    AuthorizationApp getProfile(String login);
+    AuthorizationApp getProfileByLogin(String login, String password);
 
 }
