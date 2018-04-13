@@ -31,10 +31,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(Order order) {
-        if (order.getUserId() != null){
-            order.setUserId(usersRepository.findOne(order.getUserId().getUserId()));
+        if (order.getUser() != null){
+            order.setUser(usersRepository.findOne(order.getUser().getUserId()));
         }
-        order.setStatusId(statusesRepository.findOne(order.getStatusId().getStatusId()));
+        order.setStatus(statusesRepository.findOne(order.getStatus().getStatusId()));
         return ordersRepository.save(order);
     }
 
@@ -51,24 +51,24 @@ public class OrderServiceImpl implements OrderService {
         if ((newOrder.getDescription()) != null && !(newOrder.getDescription().equals(""))){
             oldOrder.setDescription(newOrder.getDescription());
         }
-        if (newOrder.getStatusId() != null && statusesRepository.exists(newOrder.getStatusId().getStatusId()) && !oldOrder.getStatusId().equals(newOrder.getStatusId())){
-            oldOrder.setStatusId(statusesRepository.findOne(newOrder.getStatusId().getStatusId()));
+        if (newOrder.getStatus() != null && statusesRepository.exists(newOrder.getStatus().getStatusId()) && !oldOrder.getStatus().equals(newOrder.getStatus())){
+            oldOrder.setStatus(statusesRepository.findOne(newOrder.getStatus().getStatusId()));
         }
         if ((newOrder.getRating() >= 0)){
             oldOrder.setRating(newOrder.getRating());
         }
-        if (newOrder.getUserId() != null && usersRepository.exists(newOrder.getUserId().getUserId()) && oldOrder.getUserId() == null){
-            oldOrder.setUserId(usersRepository.findOne(newOrder.getUserId().getUserId()));
+        if (newOrder.getUser() != null && usersRepository.exists(newOrder.getUser().getUserId()) && oldOrder.getUser() == null){
+            oldOrder.setUser(usersRepository.findOne(newOrder.getUser().getUserId()));
         }
-        if (newOrder.getServiceId() != null && servicesRepository.exists(newOrder.getServiceId().getServiceId()) && oldOrder.getServiceId() == null){
-            oldOrder.setServiceId(servicesRepository.findOne(newOrder.getServiceId().getServiceId()));
+        if (newOrder.getService() != null && servicesRepository.exists(newOrder.getService().getServiceId()) && oldOrder.getService() == null){
+            oldOrder.setService(servicesRepository.findOne(newOrder.getService().getServiceId()));
         }
         return ordersRepository.save(oldOrder);
     }
 
     @Override
     public void deleteOrder(int orderId) {
-        ordersRepository.findOne(orderId).setStatusId(null);
+        ordersRepository.findOne(orderId).setStatus(null);
         ordersRepository.delete(orderId);
     }
 }
