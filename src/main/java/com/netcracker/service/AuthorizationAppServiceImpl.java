@@ -26,21 +26,24 @@ public class AuthorizationAppServiceImpl implements AuthorizationAppService {
 
     @Override
     public AuthorizationApp registeringNewProfile(AuthorizationApp authorizationApp) {
-        AuthorizationApp app = new AuthorizationApp(authorizationApp.getLogin().toLowerCase(), authorizationApp.getPassword().toLowerCase());
-        if (authorizationApp.getUser() != null && usersRepository.exists(authorizationApp.getUser().getUserId())) {
-            app.setUser(usersRepository.findOne(authorizationApp.getUser().getUserId()));
-            return authorizationAppRepository.save(app);
-        }   else
-        if (authorizationApp.getService() != null && servicesRepository.exists(authorizationApp.getService().getServiceId())) {
-            app.setService(servicesRepository.findOne(authorizationApp.getService().getServiceId()));
-            return authorizationAppRepository.save(app);
-        } else return null;
+        if (authorizationApp.getLogin() != null && !"".equals(authorizationApp.getLogin()) && authorizationApp.getPassword() != null && !"".equals(authorizationApp.getPassword())){
+            if (authorizationApp.getUser() != null && usersRepository.exists(authorizationApp.getUser().getUserId())) {
+                authorizationApp.setLogin(authorizationApp.getLogin().toLowerCase());
+                authorizationApp.setUser(usersRepository.findOne(authorizationApp.getUser().getUserId()));
+                return authorizationAppRepository.save(authorizationApp);
+            }   else
+            if (authorizationApp.getService() != null && servicesRepository.exists(authorizationApp.getService().getServiceId())) {
+                authorizationApp.setLogin(authorizationApp.getLogin().toLowerCase());
+                authorizationApp.setService(servicesRepository.findOne(authorizationApp.getService().getServiceId()));
+                return authorizationAppRepository.save(authorizationApp);
+            }   else return null;
+        }   else return null;
     }
 
     @Override
     public AuthorizationApp getProfileByLogin(String login, String password) {
         AuthorizationApp app = authorizationAppRepository.findProfileByLogin(login.toLowerCase());
-        if (app != null && password.toLowerCase().equals(app.getPassword())){
+        if (app != null && password.equals(app.getPassword())){
             return app;
         }   else return null;
     }
