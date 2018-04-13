@@ -11,4 +11,10 @@ public interface AuthorizationAppRepository extends CrudRepository<Authorization
 
     @Query("FROM AuthorizationApp where login = ?1")
     AuthorizationApp findProfileByLogin(@Param("login") String login);
+
+    @Query("FROM AuthorizationApp where user_id = ?1")
+    AuthorizationApp findProfileByUser(@Param("user_id") int userId);
+
+    @Query("FROM AuthorizationApp where service_id = ?1")
+    AuthorizationApp findProfileByService(@Param("service_id") int serviceId);
 }
