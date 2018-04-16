@@ -1,9 +1,11 @@
 package com.netcracker.controller;
 
-import com.netcracker.jpa.User;
+import com.netcracker.dto.UserDto;
 import com.netcracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -13,22 +15,22 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Iterable<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public User createUser(@RequestBody User user){
-        return userService.createUser(user);
+    public UserDto createUser(@RequestBody UserDto userDto){
+        return userService.createUser(userDto);
     }
 
     @RequestMapping(value = "/{user_id:[\\d]+}", method = RequestMethod.GET)
-    public User getUser(@PathVariable("user_id") int userId) {
+    public UserDto getUser(@PathVariable("user_id") int userId) {
         return userService.getUser(userId);
     }
 
     @RequestMapping(value = "/{user_id:[\\d]+}", method = RequestMethod.PATCH)
-    public User updateUser(@PathVariable("user_id") int oldUserId, @RequestBody User newUser) {
+    public UserDto updateUser(@PathVariable("user_id") int oldUserId, @RequestBody UserDto newUser) {
         return userService.updateUser(oldUserId, newUser);
     }
 
