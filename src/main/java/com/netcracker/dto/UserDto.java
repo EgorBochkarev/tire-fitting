@@ -4,6 +4,7 @@ import com.netcracker.jpa.CarInfo;
 
 
 public class UserDto {
+
     private int userId;
 
     private String name;
