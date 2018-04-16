@@ -1,7 +1,6 @@
 package com.netcracker.service;
 
 import com.netcracker.dto.UserDto;
-import com.netcracker.jpa.CarInfo;
 import com.netcracker.jpa.Order;
 import com.netcracker.jpa.User;
 import com.netcracker.repository.AuthorizationAppRepository;
