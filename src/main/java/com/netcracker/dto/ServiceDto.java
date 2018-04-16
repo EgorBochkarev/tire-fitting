@@ -12,11 +12,12 @@ public class ServiceDto {
 
     private double totalRating;
 
-    public ServiceDto(int serviceId, String name, String location, int servingStaff) {
+    public ServiceDto(int serviceId, String name, String location, int servingStaff, double totalRating) {
         this.serviceId = serviceId;
         this.name = name;
         this.location = location;
         this.servingStaff = servingStaff;
+        this.totalRating = totalRating;
     }
 
     public ServiceDto() {

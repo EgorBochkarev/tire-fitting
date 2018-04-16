@@ -1,11 +1,18 @@
 package com.netcracker.service;
 
-import com.netcracker.jpa.Service;
+import com.netcracker.dto.ServiceDto;
+
+import java.util.List;
 
 public interface ServiceService {
-    Iterable<Service> getAllServices();
-    Service createService(Service service);
-    Service getService(int serviceId);
-    Service updateService(int serviceId, Service service);
+
+    List<ServiceDto> getAllServices();
+
+    ServiceDto createService(ServiceDto serviceDto);
+
+    ServiceDto getService(int serviceId);
+
+    ServiceDto updateService(int serviceId, ServiceDto newService);
+
     void deleteService(int serviceId);
 }
