@@ -2,7 +2,6 @@ package com.netcracker.service;
 
 import com.netcracker.dto.OrderDto;
 import com.netcracker.jpa.Order;
-import com.netcracker.jpa.Status;
 import com.netcracker.repository.OrdersRepository;
 import com.netcracker.repository.ServicesRepository;
 import com.netcracker.repository.StatusesRepository;
@@ -78,12 +77,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto updateOrder(int oldOrderId, OrderDto newOrder) {
         Order oldOrder = ordersRepository.findOne(oldOrderId);
-        Status status = statusesRepository.findStatus(newOrder.getStatus());
         if ((newOrder.getDescription()) != null && !(newOrder.getDescription().equals(""))){
             oldOrder.setDescription(newOrder.getDescription());
         }
-        if (newOrder.getStatus() != null && status != null){
-            oldOrder.setStatus(status);
+        if (newOrder.getStatus() != null && statusesRepository.findStatus(newOrder.getStatus()) != null){
+            oldOrder.setStatus(statusesRepository.findStatus(newOrder.getStatus()));
         }
         if ((newOrder.getRating() > 0)){
             oldOrder.setRating(newOrder.getRating());

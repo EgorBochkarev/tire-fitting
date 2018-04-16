@@ -70,7 +70,7 @@ public class ServiceServiceImpl implements ServiceService {
         List<Order> list = servicesRepository.findOne(serviceId).getOrders();
         Service service = servicesRepository.findOne(serviceId);
         for (Order orders: list){
-            orders.setUser(null);
+            orders.setService(null);
             service.setOrders(null);
             servicesRepository.save(service);
             ordersRepository.save(orders);
