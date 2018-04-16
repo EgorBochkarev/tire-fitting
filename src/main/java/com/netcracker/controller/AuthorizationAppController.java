@@ -5,6 +5,9 @@ import com.netcracker.service.AuthorizationAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 public class AuthorizationAppController {
 
@@ -22,8 +25,14 @@ public class AuthorizationAppController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public AuthorizationApp findProfileId(@RequestParam String login, @RequestParam String password){
-        return authorizationAppService.getProfileByLogin(login, password);
+    public AuthorizationApp findProfileId(@RequestParam String login, @RequestParam String password, HttpServletResponse response){
+        AuthorizationApp app = authorizationAppService.getProfileByLogin(login, password);
+        if (app.getUser() != null){
+            response.addCookie(new Cookie("user", String.valueOf(app.getUser().getUserId())));
+        }   else {
+            response.addCookie(new Cookie("service", String.valueOf(app.getService().getServiceId())));
+        }
+        return app;
     }
 
 }
