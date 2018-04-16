@@ -43,6 +43,12 @@ public class Order {
         this.status = status;
     }
 
+    public Order(String description, User user, Status status) {
+        this.description = description;
+        this.user = user;
+        this.status = status;
+    }
+
     public int getOrderId() {
         return orderId;
     }

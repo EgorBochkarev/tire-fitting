@@ -1,16 +1,18 @@
 package com.netcracker.service;
 
-import com.netcracker.jpa.Order;
+import com.netcracker.dto.OrderDto;
+
+import java.util.List;
 
 public interface OrderService {
 
-    Iterable<Order> getAllOrders();
+    List<OrderDto> getAllOrders();
 
-    Order createOrder(Order Order);
+    OrderDto createOrder(OrderDto orderDto);
 
-    Order getOrder(int orderId);
+    OrderDto getOrder(int orderId);
 
-    Order updateOrder(int oldOrderId, Order newOrder);
+    OrderDto updateOrder(int oldOrderId, OrderDto newOrder);
 
     void deleteOrder(int orderId);
 

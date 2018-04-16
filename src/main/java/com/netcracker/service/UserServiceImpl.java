@@ -1,6 +1,6 @@
 package com.netcracker.service;
 
-import com.netcracker.jpa.CarInfo;
+import com.netcracker.dto.UserDto;
 import com.netcracker.jpa.Order;
 import com.netcracker.jpa.User;
 import com.netcracker.repository.AuthorizationAppRepository;
@@ -9,6 +9,7 @@ import com.netcracker.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -24,26 +25,31 @@ public class UserServiceImpl implements UserService {
     private AuthorizationAppRepository authorizationAppRepository;
 
     @Override
-    public Iterable<User> getAllUsers() {
-        return usersRepository.findAll();
-    }
-
-    @Override
-    public User createUser(User user) {
-        if (user.getCarInfo() == null){
-            user.setCarInfo(new CarInfo());
+    public List<UserDto> getAllUsers() {
+        Iterable<User> all = usersRepository.findAll();
+        List<UserDto> list = new LinkedList<UserDto>();
+        for (User user: all){
+            list.add(new UserDto(user.getUserId(), user.getName(), user.getLocation(), user.getCarInfo()));
         }
-        return usersRepository.save(user);
+        return list;
     }
 
     @Override
-    public User getUser(int userId) {
-        return usersRepository.findOne(userId);
+    public UserDto createUser(UserDto userDto) {
+        User user = new User(userDto.getName(), userDto.getLocation(), userDto.getCarInfo());
+        usersRepository.save(user);
+        return new UserDto(user.getUserId(), userDto.getName(), userDto.getLocation(), user.getCarInfo());
     }
 
     @Override
-    public User updateUser(int oldUserId, User newUser) {
-        User oldUser = usersRepository.findOne(oldUserId);
+    public UserDto getUser(int userId) {
+        User user = usersRepository.findOne(userId);
+        return new UserDto(user.getUserId(), user.getName(), user.getLocation(), user.getCarInfo());
+    }
+
+    @Override
+    public UserDto updateUser(int userId, UserDto newUser) {
+        User oldUser = usersRepository.findOne(userId);
         if ((newUser.getName() != null) && !(newUser.getName().equals(""))){
             oldUser.setName(newUser.getName());
         }
@@ -51,17 +57,18 @@ public class UserServiceImpl implements UserService {
             oldUser.setLocation(newUser.getLocation());
         }
         if (newUser.getCarInfo() != null){
-            if ((newUser.getCarInfo().getCarBrand() != null) && !(newUser.getCarInfo().getCarBrand().equals(""))){
+            if (!newUser.getCarInfo().getCarBrand().equals("")){
                 oldUser.getCarInfo().setCarBrand(newUser.getCarInfo().getCarBrand());
             }
-            if (newUser.getCarInfo().getTireRadius() >= 0){
+            if (newUser.getCarInfo().getTireRadius() > 0){
                 oldUser.getCarInfo().setTireRadius(newUser.getCarInfo().getTireRadius());
             }
-            if ((newUser.getCarInfo().getTireType() != null) && !(newUser.getCarInfo().getTireType().equals(""))){
+            if (!newUser.getCarInfo().getTireType().equals("")){
                 oldUser.getCarInfo().setTireType(newUser.getCarInfo().getTireType());
             }
         }
-        return usersRepository.save(oldUser);
+        usersRepository.save(oldUser);
+        return newUser;
     }
 
     @Override
