@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         usersRepository.save(oldUser);
-        return new UserDto(oldUser.getUserId(), oldUser.getName(), oldUser.getLocation(), oldUser.getCarInfo());
+        return newUser;
     }
 
     @Override
