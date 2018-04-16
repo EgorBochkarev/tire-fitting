@@ -1,13 +1,15 @@
 package com.netcracker.service;
 
-import com.netcracker.jpa.AuthorizationApp;
+import com.netcracker.dto.AuthorizationAppDto;
+
+import java.util.List;
 
 public interface AuthorizationAppService {
 
-    Iterable<AuthorizationApp> getAllAuthorizationApp();
+    List<AuthorizationAppDto> getAllAuthorizationApp();
 
-    AuthorizationApp registeringNewProfile(AuthorizationApp authorizationApp);
+    AuthorizationAppDto registeringNewProfile(AuthorizationAppDto authorizationAppDto);
 
-    AuthorizationApp getProfileByLogin(String login, String password);
+    AuthorizationAppDto getProfileByLogin(String login, String password);
 
 }
