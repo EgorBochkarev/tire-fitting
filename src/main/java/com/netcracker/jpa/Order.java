@@ -20,6 +20,10 @@ public class Order {
     @Column(name = "description")
     private String description;
 
+    @Basic
+    @Column(name = "location")
+    private String location;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
@@ -38,15 +42,17 @@ public class Order {
     public Order() {
     }
 
-    public Order(String description, Status status) {
+    public Order(String description, Status status, String location) {
         this.description = description;
         this.status = status;
+        this.location = location;
     }
 
-    public Order(String description, User user, Status status) {
+    public Order(String description, User user, Status status, String location) {
         this.description = description;
         this.user = user;
         this.status = status;
+        this.location = location;
     }
 
     public int getOrderId() {
@@ -79,6 +85,14 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Service getService() {
@@ -133,8 +147,10 @@ public class Order {
                 "orderId=" + orderId +
                 ", rating=" + rating +
                 ", description='" + description + '\'' +
+                ", location='" + location + '\'' +
                 ", user=" + user +
                 ", service=" + service +
+                ", status=" + status +
                 '}';
     }
 }

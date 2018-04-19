@@ -15,13 +15,30 @@ public class AuthorizationAppController {
     @Autowired
     private AuthorizationAppService authorizationAppService;
 
+    private Cookie userCookie = new Cookie("user", "");
+
+    private Cookie serviceCookie = new Cookie("service", "");
+
     @RequestMapping(value = "/authorization", method = RequestMethod.GET)
     public List<AuthorizationAppDto> getAllAuthorizationApp(){
         return authorizationAppService.getAllAuthorizationApp();
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public AuthorizationAppDto registeringNewProfile(@RequestBody AuthorizationAppDto app){
+    public AuthorizationAppDto registeringNewProfile(@RequestBody AuthorizationAppDto app, HttpServletResponse response){
+        if (app.getUserId() > 0){
+            userCookie.setValue(String.valueOf(app.getUserId()));
+            serviceCookie.setMaxAge(0);
+            userCookie.setMaxAge(-1);
+            response.addCookie(userCookie);
+            response.addCookie(serviceCookie);
+        }   else {
+            serviceCookie.setValue(String.valueOf(app.getServiceId()));
+            userCookie.setMaxAge(0);
+            serviceCookie.setMaxAge(-1);
+            response.addCookie(serviceCookie);
+            response.addCookie(userCookie);
+        }
         return authorizationAppService.registeringNewProfile(app);
     }
 
@@ -29,9 +46,17 @@ public class AuthorizationAppController {
     public AuthorizationAppDto findProfileId(@RequestParam String login, @RequestParam String password, HttpServletResponse response){
         AuthorizationAppDto app = authorizationAppService.getProfileByLogin(login, password);
         if (app.getUserId() > 0){
-            response.addCookie(new Cookie("user", String.valueOf(app.getUserId())));
+            userCookie.setValue(String.valueOf(app.getUserId()));
+            serviceCookie.setMaxAge(0);
+            userCookie.setMaxAge(-1);
+            response.addCookie(userCookie);
+            response.addCookie(serviceCookie);
         }   else {
-            response.addCookie(new Cookie("service", String.valueOf(app.getServiceId())));
+            serviceCookie.setValue(String.valueOf(app.getServiceId()));
+            userCookie.setMaxAge(0);
+            serviceCookie.setMaxAge(-1);
+            response.addCookie(serviceCookie);
+            response.addCookie(userCookie);
         }
         return app;
     }

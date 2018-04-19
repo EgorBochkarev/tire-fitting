@@ -16,10 +16,6 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Basic
-    @Column(name = "location")
-    private String location;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Order> orders;
 
@@ -27,14 +23,12 @@ public class User {
     @JoinColumn(name = "car_info_id", referencedColumnName = "car_info_id", nullable = false)
     private CarInfo carInfo;
 
-    public User(String name, String location) {
+    public User(String name) {
         this.name = name;
-        this.location = location;
     }
 
-    public User(String name, String location, CarInfo carInfo) {
+    public User(String name, CarInfo carInfo) {
         this.name = name;
-        this.location = location;
         this.carInfo = carInfo;
     }
 
@@ -55,14 +49,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public List<Order> getOrders() {
@@ -90,7 +76,6 @@ public class User {
 
         if (userId != user.userId) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        if (location != null ? !location.equals(user.location) : user.location != null) return false;
 
         return true;
     }
@@ -99,7 +84,6 @@ public class User {
     public int hashCode() {
         int result = userId;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (location != null ? location.hashCode() : 0);
         return result;
     }
 
@@ -108,7 +92,6 @@ public class User {
         return "User{" +
                 "userId=" + userId +
                 ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
                 '}';
     }
 }

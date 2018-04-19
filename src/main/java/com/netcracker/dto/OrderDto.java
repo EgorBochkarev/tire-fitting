@@ -9,6 +9,8 @@ public class OrderDto {
 
     private String description;
 
+    private String location;
+
     private int rating;
 
     private int userId;
@@ -30,18 +32,28 @@ public class OrderDto {
     public OrderDto() {
     }
 
-    public OrderDto(String status, String description) {
+    public OrderDto(String location, String status, String description) {
+        this.location = location;
         this.status = status;
         this.description = description;
     }
 
-    public OrderDto(int orderId, String status, String description, int rating, int userId, int serviceId) {
+    public OrderDto(int orderId, String location,String status, String description, int rating, int userId, int serviceId) {
         this.orderId = orderId;
+        this.location = location;
         this.status = status;
         this.description = description;
         this.rating = rating;
         this.userId = userId;
         this.serviceId = serviceId;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public int getOrderId() {
@@ -86,10 +98,11 @@ public class OrderDto {
 
     @Override
     public String toString() {
-        return "OrderWrapper{" +
+        return "OrderDto{" +
                 "orderId=" + orderId +
                 ", status='" + status + '\'' +
                 ", description='" + description + '\'' +
+                ", location='" + location + '\'' +
                 ", rating=" + rating +
                 ", userId=" + userId +
                 ", serviceId=" + serviceId +
