@@ -1,11 +1,11 @@
 package com.netcracker.controller;
 
+import com.netcracker.cookie.CookieApp;
 import com.netcracker.dto.AuthorizationAppDto;
 import com.netcracker.service.AuthorizationAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -15,9 +15,8 @@ public class AuthorizationAppController {
     @Autowired
     private AuthorizationAppService authorizationAppService;
 
-    private Cookie userCookie = new Cookie("user", "");
-
-    private Cookie serviceCookie = new Cookie("service", "");
+    @Autowired
+    private CookieApp cookieApp;
 
     @RequestMapping(value = "/authorization", method = RequestMethod.GET)
     public List<AuthorizationAppDto> getAllAuthorizationApp(){
@@ -25,39 +24,15 @@ public class AuthorizationAppController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public AuthorizationAppDto registeringNewProfile(@RequestBody AuthorizationAppDto app, HttpServletResponse response){
-        if (app.getUserId() > 0){
-            userCookie.setValue(String.valueOf(app.getUserId()));
-            serviceCookie.setMaxAge(0);
-            userCookie.setMaxAge(-1);
-            response.addCookie(userCookie);
-            response.addCookie(serviceCookie);
-        }   else {
-            serviceCookie.setValue(String.valueOf(app.getServiceId()));
-            userCookie.setMaxAge(0);
-            serviceCookie.setMaxAge(-1);
-            response.addCookie(serviceCookie);
-            response.addCookie(userCookie);
-        }
-        return authorizationAppService.registeringNewProfile(app);
+    public AuthorizationAppDto registeringNewProfile(@RequestBody AuthorizationAppDto appDto, HttpServletResponse response){
+        cookieApp.setCookie(appDto, response);
+        return authorizationAppService.registeringNewProfile(appDto);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public AuthorizationAppDto findProfileId(@RequestParam String login, @RequestParam String password, HttpServletResponse response){
-        AuthorizationAppDto app = authorizationAppService.getProfileByLogin(login, password);
-        if (app.getUserId() > 0){
-            userCookie.setValue(String.valueOf(app.getUserId()));
-            serviceCookie.setMaxAge(0);
-            userCookie.setMaxAge(-1);
-            response.addCookie(userCookie);
-            response.addCookie(serviceCookie);
-        }   else {
-            serviceCookie.setValue(String.valueOf(app.getServiceId()));
-            userCookie.setMaxAge(0);
-            serviceCookie.setMaxAge(-1);
-            response.addCookie(serviceCookie);
-            response.addCookie(userCookie);
-        }
-        return app;
+        AuthorizationAppDto appDto = authorizationAppService.getProfileByLogin(login, password);
+        cookieApp.setCookie(appDto, response);
+        return appDto;
     }
 }
