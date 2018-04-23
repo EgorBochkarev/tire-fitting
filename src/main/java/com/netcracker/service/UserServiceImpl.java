@@ -29,22 +29,22 @@ public class UserServiceImpl implements UserService {
         Iterable<User> all = usersRepository.findAll();
         List<UserDto> list = new LinkedList<UserDto>();
         for (User user: all){
-            list.add(new UserDto(user.getUserId(), user.getName(), user.getLocation(), user.getCarInfo()));
+            list.add(new UserDto(user.getUserId(), user.getName(), user.getCarInfo()));
         }
         return list;
     }
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = new User(userDto.getName(), userDto.getLocation(), userDto.getCarInfo());
+        User user = new User(userDto.getName(), userDto.getCarInfo());
         usersRepository.save(user);
-        return new UserDto(user.getUserId(), userDto.getName(), userDto.getLocation(), user.getCarInfo());
+        return new UserDto(user.getUserId(), userDto.getName(), user.getCarInfo());
     }
 
     @Override
     public UserDto getUser(int userId) {
         User user = usersRepository.findOne(userId);
-        return new UserDto(user.getUserId(), user.getName(), user.getLocation(), user.getCarInfo());
+        return new UserDto(user.getUserId(), user.getName(), user.getCarInfo());
     }
 
     @Override
@@ -52,9 +52,6 @@ public class UserServiceImpl implements UserService {
         User oldUser = usersRepository.findOne(userId);
         if ((newUser.getName() != null) && !(newUser.getName().equals(""))){
             oldUser.setName(newUser.getName());
-        }
-        if ((newUser.getLocation() != null) && !(newUser.getLocation().equals(""))){
-            oldUser.setLocation(newUser.getLocation());
         }
         if (newUser.getCarInfo() != null){
             if (!newUser.getCarInfo().getCarBrand().equals("")){
@@ -68,7 +65,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         usersRepository.save(oldUser);
-        return newUser;
+        return new UserDto(oldUser.getUserId(), oldUser.getName(), oldUser.getCarInfo());
     }
 
     @Override

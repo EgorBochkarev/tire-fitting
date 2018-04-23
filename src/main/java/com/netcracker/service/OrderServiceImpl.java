@@ -35,15 +35,15 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDto> list = new LinkedList<OrderDto>();
         for (Order order: all){
             if (order.getService() != null && order.getUser() != null){
-                list.add(new OrderDto(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), order.getService().getServiceId()));
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), order.getService().getServiceId()));
             }   else
             if (order.getService() == null && order.getUser() != null) {
-                list.add(new OrderDto(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), 0));
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), 0));
             }   else
             if (order.getUser() == null && order.getService() != null) {
-                list.add(new OrderDto(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, order.getService().getServiceId()));
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, order.getService().getServiceId()));
             } else {
-                list.add(new OrderDto(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, 0));
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, 0));
             }
         }
         return list;
@@ -51,14 +51,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto createOrder(OrderDto orderDto) {
-        Order order = new Order(orderDto.getDescription(), statusesRepository.findStatus(orderDto.getStatus()));
+        Order order = new Order(orderDto.getDescription(), statusesRepository.findStatus(orderDto.getStatus()), orderDto.getLocation());
         if (orderDto.getUserId() > 0 && usersRepository.exists(orderDto.getUserId())) {
             order.setUser(usersRepository.findOne(orderDto.getUserId()));
             order = ordersRepository.save(order);
-            return new OrderDto(order.getOrderId(), orderDto.getStatus(), orderDto.getDescription(), 0, usersRepository.findOne(orderDto.getUserId()).getUserId(), 0);
+            return new OrderDto(order.getOrderId(), orderDto.getLocation(), orderDto.getStatus(), orderDto.getDescription(), 0, usersRepository.findOne(orderDto.getUserId()).getUserId(), 0);
         }   else{
             order = ordersRepository.save(order);
-            return new OrderDto(order.getOrderId(), orderDto.getStatus(), orderDto.getDescription(), 0, 0, 0);
+            return new OrderDto(order.getOrderId(), orderDto.getLocation(), orderDto.getStatus(), orderDto.getDescription(), 0, 0, 0);
         }
     }
 
@@ -66,26 +66,29 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto getOrder(int orderId) {
         Order order = ordersRepository.findOne(orderId);
         if (order.getUser() != null && order.getService() != null){
-            return new OrderDto(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(),order.getRating(), order.getUser().getUserId(), order.getService().getServiceId());
+            return new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(),order.getRating(), order.getUser().getUserId(), order.getService().getServiceId());
         }   else
         if (order.getUser() != null && order.getService() == null){
-            return new OrderDto(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), 0);
+            return new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), order.getUser().getUserId(), 0);
         }   else if (order.getUser() == null && order.getService() != null){
-            return new OrderDto(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, order.getService().getServiceId());
-        }   else return new OrderDto(order.getOrderId(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, 0);
+            return new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, order.getService().getServiceId());
+        }   else return new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getRating(), 0, 0);
     }
 
     @Override
     public OrderDto updateOrder(int oldOrderId, OrderDto newOrder) {
         Order oldOrder = ordersRepository.findOne(oldOrderId);
         Status status = statusesRepository.findStatus(newOrder.getStatus());
-        if ((newOrder.getDescription()) != null && !(newOrder.getDescription().equals(""))){
+        if (newOrder.getDescription() != null && !newOrder.getDescription().equals("")){
             oldOrder.setDescription(newOrder.getDescription());
         }
         if (newOrder.getStatus() != null && status != null){
             oldOrder.setStatus(status);
         }
-        if ((newOrder.getRating() > 0)){
+        if (newOrder.getLocation() != null && !newOrder.getLocation().equals("")){
+            oldOrder.setLocation(newOrder.getLocation());
+        }
+        if (newOrder.getRating() > 0){
             oldOrder.setRating(newOrder.getRating());
         }
         if (newOrder.getUserId() > 0 && usersRepository.exists(newOrder.getUserId()) && oldOrder.getUser() == null){
@@ -97,14 +100,14 @@ public class OrderServiceImpl implements OrderService {
         ordersRepository.save(oldOrder);
         oldOrder = ordersRepository.findOne(oldOrderId);
         if (oldOrder.getService() != null && oldOrder.getUser() != null){
-            return new OrderDto(oldOrder.getOrderId(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), oldOrder.getUser().getUserId(), oldOrder.getService().getServiceId());
+            return new OrderDto(oldOrder.getOrderId(), oldOrder.getLocation(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), oldOrder.getUser().getUserId(), oldOrder.getService().getServiceId());
         }   else if (oldOrder.getService() == null){
-            return new OrderDto(oldOrder.getOrderId(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), oldOrder.getUser().getUserId(), 0);
+            return new OrderDto(oldOrder.getOrderId(), oldOrder.getLocation(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), oldOrder.getUser().getUserId(), 0);
         }   else
         if (oldOrder.getUser() == null){
-            return new OrderDto(oldOrder.getOrderId(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), 0, oldOrder.getService().getServiceId());
+            return new OrderDto(oldOrder.getOrderId(), oldOrder.getLocation(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), 0, oldOrder.getService().getServiceId());
         }   else {
-            return new OrderDto(oldOrder.getOrderId(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), 0, 0);
+            return new OrderDto(oldOrder.getOrderId(), oldOrder.getLocation(), oldOrder.getStatus().getStatusName(), oldOrder.getDescription(), oldOrder.getRating(), 0, 0);
         }
 
     }

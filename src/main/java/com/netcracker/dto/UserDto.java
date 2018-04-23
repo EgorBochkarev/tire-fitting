@@ -9,14 +9,11 @@ public class UserDto {
 
     private String name;
 
-    private String location;
-
     private CarInfo carInfo;
 
-    public UserDto(int userId, String name, String location, CarInfo carInfo) {
+    public UserDto(int userId, String name, CarInfo carInfo) {
         this.userId = userId;
         this.name = name;
-        this.location = location;
         this.carInfo = carInfo;
     }
 
@@ -39,14 +36,6 @@ public class UserDto {
         this.name = name;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public CarInfo getCarInfo() {
         return carInfo;
     }
@@ -60,7 +49,6 @@ public class UserDto {
         return "UserDto{" +
                 "userId=" + userId +
                 ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
                 ", carInfoId=" + carInfo.getCarInfoId() +
                 '}';
     }
