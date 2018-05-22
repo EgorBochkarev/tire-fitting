@@ -14,26 +14,31 @@ public class ServiceController {
     @Autowired
     private ServiceService serviceService;
 
+    @CrossOrigin(origins = "http://localhost:1841")
     @RequestMapping(method = RequestMethod.GET)
     public List<ServiceDto> getAllServices() {
         return serviceService.getAllServices();
     }
 
+    @CrossOrigin(origins = "http://localhost:1841")
     @RequestMapping(method = RequestMethod.POST)
     public ServiceDto createService(@RequestBody ServiceDto serviceDto) {
         return serviceService.createService(serviceDto);
     }
 
+    @CrossOrigin(origins = "http://localhost:1841")
     @RequestMapping(value = "/{service_id:[\\d]+}", method = RequestMethod.GET)
     public ServiceDto getUser(@PathVariable("service_id") int serviceId) {
         return serviceService.getService(serviceId);
     }
 
+    @CrossOrigin(origins = "http://localhost:1841")
     @RequestMapping(value = "/{service_id:[\\d]+}", method = RequestMethod.PATCH)
     public ServiceDto updateService(@PathVariable("service_id") int serviceId, @RequestBody ServiceDto newService) {
         return serviceService.updateService(serviceId, newService);
     }
 
+    @CrossOrigin(origins = "http://localhost:1841")
     @RequestMapping(value = "/{service_id:[\\d]+}", method = RequestMethod.DELETE)
     public void deleteService(@PathVariable("service_id") int serviceId){
         serviceService.deleteService(serviceId);
