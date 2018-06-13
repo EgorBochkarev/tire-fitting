@@ -26,4 +26,13 @@ public class CookieApp {
         response.addCookie(serviceCookie);
         response.addCookie(userCookie);
     }
+
+    public void deleteCookie(HttpServletResponse response){
+        userCookie.setMaxAge(0);
+        serviceCookie.setMaxAge(0);
+        userCookie.setPath("/");
+        serviceCookie.setPath("/");
+        response.addCookie(serviceCookie);
+        response.addCookie(userCookie);
+    }
 }

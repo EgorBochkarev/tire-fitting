@@ -1,10 +1,13 @@
 package com.netcracker.controller;
 
+import com.netcracker.cookie.CookieApp;
 import com.netcracker.dto.UserDto;
 import com.netcracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -13,6 +16,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CookieApp cookieApp;
 
     @CrossOrigin(origins = "http://localhost:1841")
     @RequestMapping(method = RequestMethod.GET)
@@ -40,8 +46,9 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:1841")
     @RequestMapping(value = "/{user_id:[\\d]+}", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable("user_id") int userId){
+    public void deleteUser(@PathVariable("user_id") int userId, HttpServletResponse response) throws IOException {
         userService.deleteUser(userId);
+        cookieApp.deleteCookie(response);
     }
 
 }
