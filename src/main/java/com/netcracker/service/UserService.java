@@ -15,5 +15,4 @@ public interface UserService {
     UserDto updateUser(int oldUserId, UserDto newUser);
 
     void deleteUser(int userId);
-
 }

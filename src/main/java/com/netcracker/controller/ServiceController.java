@@ -33,7 +33,7 @@ public class ServiceController {
 
     @CrossOrigin(origins = "http://localhost:1841")
     @RequestMapping(value = "/{service_id:[\\d]+}", method = RequestMethod.GET)
-    public ServiceDto getUser(@PathVariable("service_id") int serviceId) {
+    public ServiceDto getService(@PathVariable("service_id") int serviceId) {
         return serviceService.getService(serviceId);
     }
 

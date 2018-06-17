@@ -32,7 +32,7 @@ public class UserController {
         return userService.createUser(userDto);
     }
 
-    @CrossOrigin(origins = "http://localhost:1841")
+    @CrossOrigin(origins = "http://http://localhost:1841")
     @RequestMapping(value = "/{user_id:[\\d]+}", method = RequestMethod.GET)
     public UserDto getUser(@PathVariable("user_id") int userId) {
         return userService.getUser(userId);

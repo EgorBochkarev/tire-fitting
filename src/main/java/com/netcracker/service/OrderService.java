@@ -8,6 +8,14 @@ public interface OrderService {
 
     List<OrderDto> getAllOrders();
 
+    List<OrderDto> getOrdersByUserId(int userId);
+
+    List<OrderDto> getOrdersByServiceId(int serviceId);
+
+    List<OrderDto> getActiveOrder(int userId);
+
+    List<OrderDto> getCurrentOrders();
+
     OrderDto createOrder(OrderDto orderDto);
 
     OrderDto getOrder(int orderId);

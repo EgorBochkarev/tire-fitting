@@ -50,15 +50,66 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderDto> getOrdersByUserId(int userId) {
+        Iterable<Order> orders = ordersRepository.findOrdersByUserId(userId);
+        List<OrderDto> list = new LinkedList<OrderDto>();
+        for (Order order: orders){
+            if (order.getService() == null){
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), "None", order.getUser().getName()));
+            }   else {
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getService().getName(), order.getUser().getName()));
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<OrderDto> getOrdersByServiceId(int serviceId) {
+        Iterable<Order> orders = ordersRepository.findOrdersByServicerId(serviceId);
+        List<OrderDto> list = new LinkedList<OrderDto>();
+        for (Order order: orders){
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getService().getName(), order.getUser().getName()));
+        }
+        return list;
+    }
+
+    @Override
+    public List<OrderDto> getActiveOrder(int userId) {
+        Iterable<Order> orders = ordersRepository.findActiveOrdersByUserId(userId);
+        List<OrderDto> list = new LinkedList<OrderDto>();
+        for (Order order: orders){
+            if (order.getService() == null){
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), "None", order.getUser().getName()));
+            }   else {
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), order.getService().getName(), order.getUser().getName()));
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<OrderDto> getCurrentOrders() {
+        Iterable<Order> orders = ordersRepository.findAvailableOrders();
+        List<OrderDto> list = new LinkedList<OrderDto>();
+        for (Order order: orders){
+                list.add(new OrderDto(order.getOrderId(), order.getLocation(), order.getStatus().getStatusName(), order.getDescription(), "None", order.getUser().getName()));
+        }
+        return list;
+    }
+
+
+    @Override
     public OrderDto createOrder(OrderDto orderDto) {
         Order order = new Order(orderDto.getDescription(), statusesRepository.findStatus(orderDto.getStatus()), orderDto.getLocation());
-        if (orderDto.getUserId() > 0 && usersRepository.exists(orderDto.getUserId())) {
+        List<Order> list = ordersRepository.findOrdersByUserId(orderDto.getUserId());
+        if (orderDto.getUserId() > 0 && usersRepository.exists(orderDto.getUserId()) ) {
             order.setUser(usersRepository.findOne(orderDto.getUserId()));
             order = ordersRepository.save(order);
             return new OrderDto(order.getOrderId(), orderDto.getLocation(), orderDto.getStatus(), orderDto.getDescription(), 0, usersRepository.findOne(orderDto.getUserId()).getUserId(), 0);
         }   else{
-            order = ordersRepository.save(order);
-            return new OrderDto(order.getOrderId(), orderDto.getLocation(), orderDto.getStatus(), orderDto.getDescription(), 0, 0, 0);
+//            order = ordersRepository.save(order);
+//            return new OrderDto(order.getOrderId(), orderDto.getLocation(), orderDto.getStatus(), orderDto.getDescription(), 0, 0, 0);
+            return  null;
         }
     }
 
@@ -78,12 +129,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto updateOrder(int oldOrderId, OrderDto newOrder) {
         Order oldOrder = ordersRepository.findOne(oldOrderId);
-        Status status = statusesRepository.findStatus(newOrder.getStatus());
+//        Status status = statusesRepository.findStatus(newOrder.getStatus());
         if (newOrder.getDescription() != null && !newOrder.getDescription().equals("")){
             oldOrder.setDescription(newOrder.getDescription());
         }
-        if (newOrder.getStatus() != null && status != null){
-            oldOrder.setStatus(status);
+        if (newOrder.getStatus() != null){
+            oldOrder.setStatus(statusesRepository.findStatus(newOrder.getStatus()));
         }
         if (newOrder.getLocation() != null && !newOrder.getLocation().equals("")){
             oldOrder.setLocation(newOrder.getLocation());

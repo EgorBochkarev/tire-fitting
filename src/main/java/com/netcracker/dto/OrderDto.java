@@ -17,6 +17,10 @@ public class OrderDto {
 
     private int serviceId;
 
+    private String serviceName;
+
+    private String userName;
+
     public String getDescription() {
         return description;
     }
@@ -32,10 +36,13 @@ public class OrderDto {
     public OrderDto() {
     }
 
-    public OrderDto(String location, String status, String description) {
+    public OrderDto(int orderId, String location, String status, String description, String serviceName, String userName) {
+        this.orderId = orderId;
         this.location = location;
         this.status = status;
         this.description = description;
+        this.serviceName = serviceName;
+        this.userName = userName;
     }
 
     public OrderDto(int orderId, String location,String status, String description, int rating, int userId, int serviceId) {
@@ -88,12 +95,28 @@ public class OrderDto {
         return rating;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public void setRating(int rating) {
         this.rating = rating;
     }
 
     public String getStatus() {
         return status;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 
     @Override
